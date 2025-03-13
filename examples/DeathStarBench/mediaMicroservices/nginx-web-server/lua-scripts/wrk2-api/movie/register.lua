@@ -55,6 +55,9 @@ function _M.RegisterMovie()
         break
       else
         ngx.log(ngx.ERR, "Attempt " .. attempt .. " failed: " .. (register_err or "unknown error"))
+        if client then
+          pcall(function() client:close() end)  -- Ensure the broken client is properly closed
+        end
       end
     else
       ngx.log(ngx.ERR, "Failed to obtain connection on attempt " .. attempt .. ": " .. (err or "unknown error"))
