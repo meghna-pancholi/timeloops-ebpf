@@ -8,40 +8,168 @@ local function _StrIsEmpty(s)
   return s == nil or s == ''
 end
 
+local function sleep(n)
+  ngx.sleep(n)  -- Delay execution for n seconds
+end
+
 local function _UploadUserId(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local UserServiceClient = require 'media_service_UserService'
-  local user_client = GenericObjectPool:connection(
-    UserServiceClient,"user-service" .. k8s_suffix,9090)
-  user_client:UploadUserWithUsername(req_id, post.username, carrier)
-  GenericObjectPool:returnConnection(user_client)
+  local max_retries = 10
+  local attempt = 0
+  local success = false
+  local client, err
+
+  while attempt < max_retries do
+    attempt = attempt + 1
+    client, err = GenericObjectPool:connection(UserServiceClient, "user-service" .. k8s_suffix, 9090)
+
+    if client then
+      local ok, upload_err = pcall(function()
+        client:UploadUserWithUsername(req_id, post.username, carrier)
+      end)
+
+      if ok then
+        success = true
+        GenericObjectPool:returnConnection(client)
+        break
+      else
+        ngx.log(ngx.ERR, "Attempt " .. attempt .. " failed: " .. (upload_err or "unknown error"))
+      end
+    else
+      ngx.log(ngx.ERR, "Failed to obtain connection on attempt " .. attempt .. ": " .. (err or "unknown error"))
+    end
+
+    if attempt < max_retries then
+      sleep(1)
+    end
+  end
+
+  if not success then
+    ngx.log(ngx.ERR, "UserService is unavailable after retries.")
+    return false
+  end
+  return true
 end
 
 local function _UploadText(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local TextServiceClient = require 'media_service_TextService'
-  local text_client = GenericObjectPool:connection(
-    TextServiceClient,"text-service" .. k8s_suffix ,9090)
-  text_client:UploadText(req_id, post.text, carrier)
-  GenericObjectPool:returnConnection(text_client)
+  local max_retries = 10
+  local attempt = 0
+  local success = false
+  local client, err
+
+  while attempt < max_retries do
+    attempt = attempt + 1
+    client, err = GenericObjectPool:connection(TextServiceClient, "text-service" .. k8s_suffix, 9090)
+
+    if client then
+      local ok, upload_err = pcall(function()
+        client:UploadText(req_id, post.text, carrier)
+      end)
+
+      if ok then
+        success = true
+        GenericObjectPool:returnConnection(client)
+        break
+      else
+        ngx.log(ngx.ERR, "Attempt " .. attempt .. " failed: " .. (upload_err or "unknown error"))
+      end
+    else
+      ngx.log(ngx.ERR, "Failed to obtain connection on attempt " .. attempt .. ": " .. (err or "unknown error"))
+    end
+
+    if attempt < max_retries then
+      sleep(1)
+    end
+  end
+
+  if not success then
+    ngx.log(ngx.ERR, "TextService is unavailable after retries.")
+    return false
+  end
+  return true
 end
 
 local function _UploadMovieId(req_id, post, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local MovieIdServiceClient = require 'media_service_MovieIdService'
-  local movie_id_client = GenericObjectPool:connection(
-    MovieIdServiceClient,"movie-id-service" .. k8s_suffix ,9090)
-  movie_id_client:UploadMovieId(req_id, post.title, tonumber(post.rating), carrier)
-  GenericObjectPool:returnConnection(movie_id_client)
+  local max_retries = 10
+  local attempt = 0
+  local success = false
+  local client, err
+
+  while attempt < max_retries do
+    attempt = attempt + 1
+    client, err = GenericObjectPool:connection(MovieIdServiceClient, "movie-id-service" .. k8s_suffix, 9090)
+
+    if client then
+      local ok, upload_err = pcall(function()
+        client:UploadMovieId(req_id, post.title, tonumber(post.rating), carrier)
+      end)
+
+      if ok then
+        success = true
+        GenericObjectPool:returnConnection(client)
+        break
+      else
+        ngx.log(ngx.ERR, "Attempt " .. attempt .. " failed: " .. (upload_err or "unknown error"))
+      end
+    else
+      ngx.log(ngx.ERR, "Failed to obtain connection on attempt " .. attempt .. ": " .. (err or "unknown error"))
+    end
+
+    if attempt < max_retries then
+      sleep(1)
+    end
+  end
+
+  if not success then
+    ngx.log(ngx.ERR, "MovieIdService is unavailable after retries.")
+    return false
+  end
+  return true
 end
 
 local function _UploadUniqueId(req_id, carrier)
   local GenericObjectPool = require "GenericObjectPool"
   local UniqueIdServiceClient = require 'media_service_UniqueIdService'
-  local unique_id_client = GenericObjectPool:connection(
-    UniqueIdServiceClient,"unique-id-service" .. k8s_suffix ,9090)
-  unique_id_client:UploadUniqueId(req_id, carrier)
-  GenericObjectPool:returnConnection(unique_id_client)
+  local max_retries = 10
+  local attempt = 0
+  local success = false
+  local client, err
+
+  while attempt < max_retries do
+    attempt = attempt + 1
+    client, err = GenericObjectPool:connection(UniqueIdServiceClient, "unique-id-service" .. k8s_suffix, 9090)
+
+    if client then
+      local ok, upload_err = pcall(function()
+        client:UploadUniqueId(req_id, carrier)
+      end)
+
+      if ok then
+        success = true
+        GenericObjectPool:returnConnection(client)
+        break
+      else
+        ngx.log(ngx.ERR, "Attempt " .. attempt .. " failed: " .. (upload_err or "unknown error"))
+      end
+    else
+      ngx.log(ngx.ERR, "Failed to obtain connection on attempt " .. attempt .. ": " .. (err or "unknown error"))
+    end
+
+    if attempt < max_retries then
+      sleep(1)
+    end
+  end
+
+  if not success then
+    ngx.log(ngx.ERR, "UniqueIdService is unavailable after retries.")
+    return false
+  end
+  return true
 end
 
 function _M.ComposeReview()
@@ -67,23 +195,28 @@ function _M.ComposeReview()
     ngx.exit(ngx.HTTP_BAD_REQUEST)
   end
 
-  local threads = {
-    ngx.thread.spawn(_UploadUserId, req_id, post, carrier),
-    ngx.thread.spawn(_UploadMovieId, req_id, post, carrier),
-    ngx.thread.spawn(_UploadText, req_id, post, carrier),
-    ngx.thread.spawn(_UploadUniqueId, req_id, carrier)
+  local results = {
+    _UploadUserId(req_id, post, carrier),
+    _UploadMovieId(req_id, post, carrier),
+    _UploadText(req_id, post, carrier),
+    _UploadUniqueId(req_id, carrier)
   }
 
-  local status = ngx.HTTP_OK
-  for i = 1, #threads do
-    local ok, res = ngx.thread.wait(threads[i])
-    if not ok then
-      status = ngx.HTTP_INTERNAL_SERVER_ERROR
+  local success = true
+  for _, result in ipairs(results) do
+    if not result then
+      success = false
     end
   end
-  span:finish()
-  ngx.exit(status)
 
+  if not success then
+    ngx.status = ngx.HTTP_SERVICE_UNAVAILABLE
+    ngx.say("One or more services are unavailable. Please try again later.")
+    ngx.log(ngx.ERR, "ComposeReview failed due to service unavailability.")
+  end
+
+  span:finish()
+  ngx.exit(success and ngx.HTTP_OK or ngx.HTTP_SERVICE_UNAVAILABLE)
 end
 
 return _M
