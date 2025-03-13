@@ -1,0 +1,16 @@
+# FROM yg397/thrift-microservice-deps:xenial
+FROM thrift-microservice-deps-asan:latest
+
+ENV CC="/usr/bin/clang -fsanitize=address"
+ENV CXX="/usr/bin/clang++ -fsanitize=address -fno-sanitize=vptr"
+ENV ASAN_OPTIONS=detect_leaks=0:alloc_dealloc_mismatch=0
+
+COPY ./ /media-microservices
+RUN cd /media-microservices \
+    && mkdir -p build \
+    && cd build \
+    && cmake .. \
+    && make \
+    && make install
+
+WORKDIR /media-microservices

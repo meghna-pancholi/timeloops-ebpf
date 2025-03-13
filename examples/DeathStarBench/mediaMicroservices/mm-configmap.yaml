@@ -1,0 +1,47 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: timeloops-configmap 
+data:
+  compose-post-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  cast-info-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  compose-review-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  movie-id-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  movie-info-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  movie-review-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  page-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  plot-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  rating-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  review-storage-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  text-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  unique-id-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  user-review-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle
+  user-service: | 
+    production=meghnapancholi/dsb-media:production
+    oracle=meghnapancholi/dsb-media:oracle

@@ -1,0 +1,47 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: timeloops-configmap 
+data:
+  compose-post-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  cast-info-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  compose-review-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  movie-id-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  movie-info-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  movie-review-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  page-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  plot-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  rating-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  review-storage-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  text-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  unique-id-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  user-review-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
+  user-service: | 
+    production=sha256:1add48a987110d58e74e4060f7c08f41fef3ebe6e2ba619ca713e9d4e41f0e71
+    oracle=sha256:9444952accd2324c9cb2ddda564fe8390e0cc238932b6015044a9eb21930096d
